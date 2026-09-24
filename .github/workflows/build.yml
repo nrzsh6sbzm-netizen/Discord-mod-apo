@@ -19,12 +19,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # 1. Tu dong tim va lay file .ipa trong Release cua ban (Khong lo sai link)
+          # 1. Lay file IPA tu Release
           gh release download --repo ${{ github.repository }} --pattern "*.ipa"
           mv *.ipa discord.ipa
           
-          # 2. Tai file dylib cua Revenge (ban thay the hoat dong tot nhat cho Vendetta)
-          curl -f -L -o tweak.dylib "https://github.com/revenge-mod/Revenge/releases/latest/download/Revenge.dylib"
+          # 2. Lay Loader dylib (dung Enmity link truc tiep, khong lo 404)
+          curl -L -o tweak.dylib "https://github.com/enmity-mod/tweak/releases/latest/download/Enmity.dylib"
 
       - name: Tiem Tweak vao Discord
         run: |
