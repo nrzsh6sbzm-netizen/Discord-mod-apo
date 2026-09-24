@@ -1,0 +1,29 @@
+name: Build Discord Mod
+
+on:
+  workflow_dispatch:
+
+jobs:
+  inject:
+    runs-on: macos-latest
+    steps:
+      - name: Cai dat Azule
+        run: |
+          brew install ldid
+          git clone https://github.com/Al4ise/Azule ~/Azule
+          sudo ln -sf ~/Azule/azule /usr/local/bin/azule
+
+      - name: Tai Discord goc va Vendetta Loader
+        run: |
+          curl -L -o discord.ipa "https://github.com/nrzsh6sbzm-netizen/Discord-mod-apo/releases/download/V1.0/Discord_ASD_335.0_v1.0.ipa"
+          curl -L -o Vendetta.dylib "https://github.com/vendetta-mod/Vendetta/releases/latest/download/Vendetta.dylib"
+
+      - name: Tiem Dylib vao Discord
+        run: |
+          azule -i discord.ipa -o output -f Vendetta.dylib -m
+
+      - name: Xuat file Discord Mod hoan chinh
+        uses: actions/upload-artifact@v4
+        with:
+          name: DiscordMod-IPA
+          path: output/*.ipa
