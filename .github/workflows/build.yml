@@ -6,28 +6,31 @@ on:
 jobs:
   inject:
     runs-on: macos-latest
+    permissions:
+      contents: read
     steps:
-      - name: Cai dat Azule
+      - name: Cai dat Azule va Cong cu ho tro
         run: |
-          brew install ldid
+          brew install ldid dpkg
           git clone https://github.com/Al4ise/Azule ~/Azule
           sudo ln -sf ~/Azule/azule /usr/local/bin/azule
 
-      - name: Tai Discord goc va Loader Tweak
+      - name: Tu dong tai IPA va Mod
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          curl -L -k -o discord.ipa "https://github.com/nrzsh6sbzm-netizen/Discord-mod-apo/releases/download/V1.0/Discord_ASD_335.0_v1.0.ipa"
-          curl -L -k -o tweak.dylib "https://github.com/revenge-mod/Revenge/releases/latest/download/Revenge.dylib"
-
-      - name: Kiem tra file truoc khi tiem
-        run: |
-          ls -lh discord.ipa
-          ls -lh tweak.dylib
+          # 1. Tu dong tim va lay file .ipa trong Release cua ban (Khong lo sai link)
+          gh release download --repo ${{ github.repository }} --pattern "*.ipa"
+          mv *.ipa discord.ipa
+          
+          # 2. Tai file dylib cua Revenge (ban thay the hoat dong tot nhat cho Vendetta)
+          curl -f -L -o tweak.dylib "https://github.com/revenge-mod/Revenge/releases/latest/download/Revenge.dylib"
 
       - name: Tiem Tweak vao Discord
         run: |
           azule -i discord.ipa -o output -f tweak.dylib -m
 
-      - name: Xuat file Discord Mod hoan chinh
+      - name: Xuat file Discord Mod
         uses: actions/upload-artifact@v4
         with:
           name: DiscordMod-IPA
