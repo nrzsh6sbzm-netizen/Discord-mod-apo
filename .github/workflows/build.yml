@@ -13,14 +13,19 @@ jobs:
           git clone https://github.com/Al4ise/Azule ~/Azule
           sudo ln -sf ~/Azule/azule /usr/local/bin/azule
 
-      - name: Tai Discord goc va Vendetta Loader
+      - name: Tai Discord goc va Loader Tweak
         run: |
-          curl -L -o discord.ipa "https://github.com/nrzsh6sbzm-netizen/Discord-mod-apo/releases/download/V1.0/Discord_ASD_335.0_v1.0.ipa"
-          curl -L -o Vendetta.dylib "https://github.com/vendetta-mod/Vendetta/releases/latest/download/Vendetta.dylib"
+          curl -L -k -o discord.ipa "https://github.com/nrzsh6sbzm-netizen/Discord-mod-apo/releases/download/V1.0/Discord_ASD_335.0_v1.0.ipa"
+          curl -L -k -o tweak.dylib "https://github.com/revenge-mod/Revenge/releases/latest/download/Revenge.dylib"
 
-      - name: Tiem Dylib vao Discord
+      - name: Kiem tra file truoc khi tiem
         run: |
-          azule -i discord.ipa -o output -f Vendetta.dylib -m
+          ls -lh discord.ipa
+          ls -lh tweak.dylib
+
+      - name: Tiem Tweak vao Discord
+        run: |
+          azule -i discord.ipa -o output -f tweak.dylib -m
 
       - name: Xuat file Discord Mod hoan chinh
         uses: actions/upload-artifact@v4
