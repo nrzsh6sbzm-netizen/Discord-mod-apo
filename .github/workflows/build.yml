@@ -9,26 +9,35 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: Cai dat Azule va Cong cu ho tro
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Cai dat cong cu
         run: |
           brew install ldid dpkg
           git clone https://github.com/Al4ise/Azule ~/Azule
           sudo ln -sf ~/Azule/azule /usr/local/bin/azule
 
-      - name: Tu dong tai IPA va Mod
+      - name: Lay IPA Discord tu Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # 1. Lay file IPA tu Release
           gh release download --repo ${{ github.repository }} --pattern "*.ipa"
-          mv *.ipa discord.ipa
-          
-          # 2. Lay Loader dylib (dung Enmity link truc tiep, khong lo 404)
-          curl -L -o tweak.dylib "https://github.com/enmity-mod/tweak/releases/latest/download/Enmity.dylib"
+          FILE=$(ls *.ipa | head -n 1)
+          mv "$FILE" discord.ipa
+          ls -lh discord.ipa
+
+      - name: Lay Tweak dylib on dinh
+        run: |
+          # Tai tweak tu kho archive luu tru on dinh
+          wget -O tweak.dylib "https://raw.githubusercontent.com/swaggyP36000/TrollStore-IPAs/main/files/enmity.dylib" || \
+          curl -L -o tweak.dylib "https://raw.githubusercontent.com/swaggyP36000/TrollStore-IPAs/main/files/enmity.dylib"
+          ls -lh tweak.dylib
 
       - name: Tiem Tweak vao Discord
         run: |
           azule -i discord.ipa -o output -f tweak.dylib -m
+          ls -lh output/
 
       - name: Xuat file Discord Mod
         uses: actions/upload-artifact@v4
